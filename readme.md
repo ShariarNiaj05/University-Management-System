@@ -1,4 +1,4 @@
-## PH University
+## University Management System
 
 ### Functional Requirement Analysis
 
