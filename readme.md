@@ -183,3 +183,7 @@
 - auth/change-password
 - auth/forgot-password
 - auth/reset-password
+
+## ER Diagram
+
+![ER Diagram](https://raw.githubusercontent.com/Apollo-Level2-Web-Dev/Level2-Batch-3-PH-university-server/part-1/ER_Diagram.png)
