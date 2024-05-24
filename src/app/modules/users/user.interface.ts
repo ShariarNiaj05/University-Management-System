@@ -7,8 +7,9 @@ export interface TUser {
   isDeleted: boolean;
 }
 
-export type NewUser = {
+/* export type NewUser = {
   role: string;
   password: string;
   id: string;
 };
+ */

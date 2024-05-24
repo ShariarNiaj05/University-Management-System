@@ -80,6 +80,12 @@ const studentSchema = new Schema<TStudent, StudentModel>(
   {
     //StudentMethods>({
     id: { type: String, required: true, unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'user ID is required'],
+      unique: true,
+      ref: 'User',
+    },
     password: { type: String, required: [true, 'Password is Required'] },
     name: {
       type: userNameSchema,
@@ -143,12 +149,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local Guardian is Required'],
     },
     profileImage: { type: String || undefined, required: false },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
-      // required: true,
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,
