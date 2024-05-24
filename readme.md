@@ -45,7 +45,7 @@
       2. Admin can block/unblock users.
       3. Admin can change user passwords.
 
-**Data Model**
+## **Data Model**
 
 **User:**
 
@@ -144,7 +144,7 @@
 - createdAt
 - updatedAt
 
-**API Endpoints**
+## **API Endpoints**
 
 **User:**
 
