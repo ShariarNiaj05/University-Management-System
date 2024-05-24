@@ -1,7 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserService } from './user.services';
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { password, student: studentData } = req.body;
 
@@ -13,13 +17,8 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Getting single Student Was Successful',
       data: result,
     });
-  } catch (err: any | string) {
-    console.log(err);
-    res.status(500).json({
-      success: false,
-      message: 'Unable to Process the Request To Get single the Students',
-      error: err,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
