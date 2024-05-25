@@ -9,7 +9,7 @@ import catchAsync from '../../utils/catchAsync';
   };
 }; */
 
-const getAllStudent = catchAsync(async (req, res, next) => {
+const getAllStudent = catchAsync(async (req, res) => {
   const result = await StudentServices.getAllStudentsFromDB();
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -19,7 +19,7 @@ const getAllStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-const getSingleStudent = catchAsync(async (req, res, next) => {
+const getSingleStudent = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await StudentServices.getStudentFromDBById(id);
   sendResponse(res, {
@@ -30,7 +30,7 @@ const getSingleStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteSingleStudent = catchAsync(async (req, res, next) => {
+const deleteSingleStudent = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await StudentServices.deleteStudentFromDBById(id);
   sendResponse(res, {

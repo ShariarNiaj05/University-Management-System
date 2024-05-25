@@ -1,8 +1,21 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { UserController } from './user.controller';
 
 const router = express.Router();
 
-router.post('/create-student', UserController.createStudent);
+const validationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  console.log('Army');
+  next();
+};
+
+router.post(
+  '/create-student',
+  validationMiddleware,
+  UserController.createStudent,
+);
 
 export const UserRoutes = router;
