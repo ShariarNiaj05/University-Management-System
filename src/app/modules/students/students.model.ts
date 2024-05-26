@@ -150,7 +150,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicSemesters',
+      ref: 'academicsemesters',
     },
 
     isDeleted: {
