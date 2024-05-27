@@ -1,4 +1,4 @@
-import Joi from 'joi';
+/* import Joi from 'joi';
 
 // creating a schema validation using Joi
 // --------------------------------------------
@@ -114,3 +114,4 @@ const studentJoiValidationSchema = Joi.object({
 // --------------------------------------------
 
 export default studentJoiValidationSchema;
+ */
