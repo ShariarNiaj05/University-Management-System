@@ -2,6 +2,16 @@ import { TAcademicDepartment } from './academicDepartment.interface';
 import { AcademicDepartment } from './academicDepartment.model';
 
 const createAcademicDepartmentIntoDB = async (payload: TAcademicDepartment) => {
+  // // we can create validation in service or we can do it in model using static method
+
+  /* 
+  const isDepartmentExist = await AcademicDepartment.findOne({
+    name: payload.name,
+  });
+  if (isDepartmentExist) {
+    throw new Error(`${payload.name} Department is already exist`);
+  } */
+
   const result = await AcademicDepartment.create(payload);
   return result;
 };
