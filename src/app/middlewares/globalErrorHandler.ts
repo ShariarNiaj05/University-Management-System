@@ -3,9 +3,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import { ZodError, ZodIssue } from 'zod';
+import { ZodError } from 'zod';
 import { TErrorSources } from '../interface/errorInterface';
 import config from '../config';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   err: any,
@@ -24,28 +26,18 @@ const globalErrorHandler: ErrorRequestHandler = (
     },
   ];
 
-  const handleZodError = (err: ZodError) => {
-    const errorSources: TErrorSources = err?.issues?.map((issue: ZodIssue) => {
-      return {
-        path: issue.path[issue.path.length - 1],
-        message: issue.message,
-      };
-    });
-    statusCode = 400;
-
-    return {
-      statusCode,
-      message: 'Validation Error',
-      errorSources,
-    };
-  };
-
   if (err instanceof ZodError) {
-    const simplifiedError = handleZodError(err);
+    const simplifiedZodError = handleZodError(err);
 
-    statusCode = simplifiedError?.statusCode;
-    message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    statusCode = simplifiedZodError?.statusCode;
+    message = simplifiedZodError?.message;
+    errorSources = simplifiedZodError?.errorSources;
+  } else if (err?.name === 'ValidationError') {
+    const simplifiedMongooseError = handleValidationError(err);
+
+    statusCode = simplifiedMongooseError?.statusCode;
+    message = simplifiedMongooseError?.message;
+    errorSources = simplifiedMongooseError?.errorSources;
   }
 
   // final return
@@ -53,6 +45,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorSources,
+    // err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
