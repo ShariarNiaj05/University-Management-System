@@ -8,6 +8,8 @@ import { TErrorSources } from '../interface/errorInterface';
 import config from '../config';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
+import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   err: any,
@@ -38,8 +40,19 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedMongooseError?.statusCode;
     message = simplifiedMongooseError?.message;
     errorSources = simplifiedMongooseError?.errorSources;
-  }
+  } else if (err?.name === 'CastError') {
+    const simplifiedMongooseError = handleCastError(err);
 
+    statusCode = simplifiedMongooseError?.statusCode;
+    message = simplifiedMongooseError?.message;
+    errorSources = simplifiedMongooseError?.errorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedMongooseError = handleDuplicateError(err);
+
+    statusCode = simplifiedMongooseError?.statusCode;
+    message = simplifiedMongooseError?.message;
+    errorSources = simplifiedMongooseError?.errorSources;
+  }
   // final return
   return res.status(statusCode).json({
     success: false,
