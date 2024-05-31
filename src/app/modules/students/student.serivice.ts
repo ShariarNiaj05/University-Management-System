@@ -3,6 +3,7 @@ import Student from './students.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import User from '../users/user.model';
+import { TStudent } from './students.interface';
 
 const getAllStudentsFromDB = async () => {
   //mongoose built in static method
@@ -17,13 +18,18 @@ const getStudentFromDBById = async (id: string) => {
   //mongoose built in static method
   // const result = await Student.findOne({ _id: id });
   // const result = await Student.aggregate([{ $match: { id: id } }]);
-  const result = await Student.findById(id)
+  const result = await Student.findOne({ id })
     .populate('admissionSemester')
     .populate({
       //if nested ref, i have to write like this
       path: 'academicDepartment',
       populate: 'academicFaculty',
     });
+  return result;
+};
+
+const updateStudentIntoDB = async (id: string, payload: Partial<TStudent>) => {
+  const result = await Student.findOneAndUpdate({ id }, payload);
   return result;
 };
 
@@ -60,5 +66,6 @@ const deleteStudentFromDBById = async (id: string) => {
 export const StudentServices = {
   getAllStudentsFromDB,
   getStudentFromDBById,
+  updateStudentIntoDB,
   deleteStudentFromDBById,
 };
