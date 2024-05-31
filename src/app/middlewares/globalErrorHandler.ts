@@ -3,12 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import { ZodError } from 'zod';
-
-type TErrorSources = {
-  path: string | number;
-  message: string;
-}[];
+import { ZodError, ZodIssue } from 'zod';
+import { TErrorSources } from '../interface/errorInterface';
+import config from '../config';
 
 const globalErrorHandler: ErrorRequestHandler = (
   err: any,
@@ -27,17 +24,36 @@ const globalErrorHandler: ErrorRequestHandler = (
     },
   ];
 
-  if (err instanceof ZodError) {
+  const handleZodError = (err: ZodError) => {
+    const errorSources: TErrorSources = err?.issues?.map((issue: ZodIssue) => {
+      return {
+        path: issue.path[issue.path.length - 1],
+        message: issue.message,
+      };
+    });
     statusCode = 400;
-    message = 'this is zod err';
-    // errorSources
+
+    return {
+      statusCode,
+      message: 'Validation Error',
+      errorSources,
+    };
+  };
+
+  if (err instanceof ZodError) {
+    const simplifiedError = handleZodError(err);
+
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
   }
 
+  // final return
   return res.status(statusCode).json({
     success: false,
     message,
     errorSources,
-    // error: err,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
 
