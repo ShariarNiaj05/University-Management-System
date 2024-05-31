@@ -80,11 +80,11 @@ const studentJoiValidationSchema = Joi.object({
     'string.empty': 'Email is Required',
     'string.email': '{#value} is not in email format',
   }),
-  contactNumber: Joi.string().trim().required().messages({
+  contactNo: Joi.string().trim().required().messages({
     'string.base': 'Contact Number should be a string',
     'string.empty': 'Contact No is Required',
   }),
-  emergencyContactNumber: Joi.string().trim().required().messages({
+  emergencycontactNo: Joi.string().trim().required().messages({
     'string.base': 'Emergency Contact Number should be a string',
     'string.empty': 'Emergency No is Required',
   }),

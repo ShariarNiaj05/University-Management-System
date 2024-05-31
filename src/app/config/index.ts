@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+dotenv.config({ path: path.join((process.cwd(), '.env')) });
 
 export default {
   port: process.env.PORT,
-  databaseURI: process.env.DATABASE_URI,
-  bcrypt_salt_round: process.env.BCRYPT_SALT_ROUND,
-  Default_Pass: process.env.DEFAULT_PASS,
+  database_url: process.env.DATABASE_URL,
+  bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
+  default_password: process.env.DEFAULT_PASS,
 };

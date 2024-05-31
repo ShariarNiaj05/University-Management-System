@@ -112,12 +112,12 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: '{VALUE} is not in email format',
       },
     },
-    contactNumber: {
+    contactNo: {
       type: String,
       trim: true,
       required: [true, 'Contact No is Required'],
     },
-    emergencyContactNumber: {
+    emergencyContactNo: {
       type: String,
       trim: true,
       required: [true, 'Emergency No is Required'],

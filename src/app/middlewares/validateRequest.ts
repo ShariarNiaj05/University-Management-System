@@ -4,12 +4,13 @@ import { AnyZodObject } from 'zod';
 const validateRequest = (schema: AnyZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Validation process
+      // validation check
+      //if everything allright next() ->
       await schema.parseAsync({
         body: req.body,
       });
 
-      return next();
+      next();
     } catch (err) {
       next(err);
     }

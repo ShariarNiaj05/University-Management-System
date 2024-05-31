@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { AcademicFacultyServices } from './academicFaculty.services';
+import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req, res) => {
   const result = await AcademicFacultyServices.createAcademicFacultyIntoDB(
@@ -11,17 +11,18 @@ const createAcademicFaculty = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty is created Successfully',
+    message: 'Academic faculty is created succesfully',
     data: result,
   });
 });
 
 const getAllAcademicFaculties = catchAsync(async (req, res) => {
   const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB();
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty Retrieved Successful',
+    message: 'Academic faculties are retrieved successfully',
     data: result,
   });
 });
@@ -30,30 +31,31 @@ const getSingleAcademicFaculty = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
   const result =
     await AcademicFacultyServices.getSingleAcademicFacultyFromDB(facultyId);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty Retrieve Successfully',
+    message: 'Academic faculty is retrieved succesfully',
     data: result,
   });
 });
 
 const updateAcademicFaculty = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
-  const payload = req.body;
   const result = await AcademicFacultyServices.updateAcademicFacultyIntoDB(
     facultyId,
-    payload,
+    req.body,
   );
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty Updated Successfully',
+    message: 'Academic faculty is updated succesfully',
     data: result,
   });
 });
 
-export const AcademicFacultyController = {
+export const AcademicFacultyControllers = {
   createAcademicFaculty,
   getAllAcademicFaculties,
   getSingleAcademicFaculty,
