@@ -1,4 +1,3 @@
-import { start } from 'repl';
 import config from '../../config';
 // import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import AcademicSemester from '../academicSemester/academicSemester.model';
