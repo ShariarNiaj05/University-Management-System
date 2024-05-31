@@ -10,6 +10,7 @@ import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   err: any,
@@ -18,8 +19,8 @@ const globalErrorHandler: ErrorRequestHandler = (
   next: NextFunction,
 ) => {
   // setting default values
-  let statusCode = err.statusCode || 500;
-  let message = err.message || 'Something went wrong!';
+  let statusCode = 500;
+  let message = 'Something went wrong!';
 
   let errorSources: TErrorSources = [
     {
@@ -52,7 +53,26 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedMongooseError?.statusCode;
     message = simplifiedMongooseError?.message;
     errorSources = simplifiedMongooseError?.errorSources;
+  } else if (err instanceof AppError) {
+    statusCode = err.statusCode;
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } else if (err instanceof Error) {
+    // statusCode = err.statusCode; //Property 'statusCode' does not exist on type 'Error'.ts(2339)
+    message = err?.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
+
   // final return
   return res.status(statusCode).json({
     success: false,
