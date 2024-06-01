@@ -6,21 +6,34 @@ import { TStudent } from './student.interface';
 import { Student } from './student.model';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  const queryObj = { ...query }; // copy of query. SO that any changes doesn't mutate base query
+  // searching
+  const studentSearchableFields = [
+    'email',
+    'name.firstName',
+    'name.middleName',
+    'name.lastName',
+    'fullName',
+  ];
   let searchTerm = '';
   if (query?.searchTerm) {
     searchTerm = query.searchTerm as string;
   }
-  const result = await Student.find({
-    $or: [
-      'email',
-      'name.firstName',
-      'name.middleName',
-      'name.lastName',
-      'fullName',
-    ].map(field => ({
+
+  // chaining for search for. searchQuery will not execute until it use with await
+  const searchQuery = Student.find({
+    $or: studentSearchableFields.map(field => ({
       [field]: { $regex: searchTerm, $options: 'i' },
     })),
-  })
+  });
+
+  // filtering
+  const excludeFields = ['searchTerm', 'sort', 'page', 'limit'];
+  excludeFields.forEach(el => delete queryObj[el]);
+
+  // chaining for filter for.
+  const filterQuery = searchQuery
+    .find(queryObj)
     .populate('admissionSemester')
     .populate({
       path: 'academicDepartment',
@@ -29,7 +42,24 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
       },
     });
 
-  return result;
+  // sorting
+  let sort = '-createdAt';
+
+  if (query?.sort) {
+    sort = query.sort as string;
+  }
+
+  const sortQuery = filterQuery.sort(sort);
+
+  // limiting
+  let limit = 2;
+  if (query?.limit) {
+    limit = query.limit as number;
+  }
+
+  const limitQuery = await sortQuery.limit(limit);
+
+  return limitQuery;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
