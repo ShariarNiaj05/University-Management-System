@@ -1,7 +1,7 @@
 import express from 'express';
-import validateRequest from '../../../../../../PH project/Level2-Batch-3-PH-university-server/src/app/middlewares/validateRequest';
 import { CourseControllers } from './course.controller';
 import { CourseValidations } from './course.validation';
+import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
