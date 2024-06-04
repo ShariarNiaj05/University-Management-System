@@ -54,6 +54,17 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     },
   );
 
+  // check if there is any pre requisite courses to update
+  if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+    // filter out the deleted fields
+    const deletedPrerequisites = preRequisiteCourses
+      .filter(el => el.course && el.isDeleted)
+      .map(el => el.course);
+    const deletedPrerequisiteCourses = await Course.findById(id, {
+      $pull: { preRequisiteCourses: { course: { $in: deletedPrerequisites } } },
+    });
+  }
+
   return updatedBasicCourseInfo;
 };
 
