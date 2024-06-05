@@ -25,7 +25,7 @@ const semesterRegistrationSchema = new mongoose.Schema<TSemesterRegistration>(
     },
     minCredit: {
       type: Number,
-      default: 3,
+      default: 1,
     },
     maxCredit: {
       type: Number,
