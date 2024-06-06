@@ -13,11 +13,11 @@ router.post(
   SemesterRegistrationController.createSemesterRegistration,
 );
 router.patch(
-  '/update-semester-registration',
+  '/:id',
   validateRequest(
     SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
   ),
-  SemesterRegistrationController.,
+  SemesterRegistrationController.updateSingleSemesterRegistration,
 );
 
 router.get(

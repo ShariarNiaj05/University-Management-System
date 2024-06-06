@@ -63,7 +63,7 @@ const updateSingleSemesterRegistration = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Semester Registration is retrieved Successfully',
+      message: 'Semester Registration is updated Successfully',
       data: result,
     });
   },
