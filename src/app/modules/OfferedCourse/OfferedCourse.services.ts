@@ -1,3 +1,5 @@
+import { OfferedCourse } from './OfferedCourse.model';
+
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
     semesterRegistration,
@@ -10,6 +12,9 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     startTime,
     endTime,
   } = payload;
+
+  const result = await OfferedCourse.create(payload);
+  return result;
 };
 
 const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {};
