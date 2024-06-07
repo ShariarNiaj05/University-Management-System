@@ -17,13 +17,11 @@ const createOfferedCourse = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllOfferedCourses = catchAsync(async (req: Request, res: Response) => {
-  const result = await OfferedCourseServices.createOfferedCourseIntoDB(
-    req.body,
-  );
+  const result = '';
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Offered Course is created successfully !',
+    message: 'OfferedCourses retrieved successfully !',
     data: result,
   });
 });
@@ -31,7 +29,7 @@ const getAllOfferedCourses = catchAsync(async (req: Request, res: Response) => {
 const getSingleOfferedCourses = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = '';
+    const result = await OfferedCourseServices.getSingleOfferedCourseFromDB(id);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -45,7 +43,10 @@ const getSingleOfferedCourses = catchAsync(
 const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = '';
+  const result = await OfferedCourseServices.updateOfferedCourseIntoDB(
+    id,
+    req.body,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -57,7 +58,7 @@ const updateOfferedCourse = catchAsync(async (req: Request, res: Response) => {
 const deleteOfferedCourseFromDB = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = '';
+    const result = await OfferedCourseServices.deleteOfferedCourseFromDB(id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
