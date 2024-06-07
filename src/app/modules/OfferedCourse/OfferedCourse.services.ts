@@ -7,6 +7,7 @@ import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
 import { Course } from '../Course/course.model';
 import { Faculty } from '../Faculty/faculty.model';
 import { TOfferedCourse } from './OfferedCourse.interface';
+import { hasTimeConflict } from './OfferedCourse.utils';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -109,7 +110,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     endTime,
   };
 
-  assignedSchedules.forEach(schedule => {
+  /*   assignedSchedules.forEach(schedule => {
     const existingStartTime = new Date(`1970-01-01T${schedule.startTime}`);
     const existingEndTime = new Date(`1970-01-01T${schedule.endTime}`);
     const newStartTime = new Date(`1970-01-01T${newSchedule.startTime}`);
@@ -121,7 +122,14 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
         `This faculty is not available at that time! Choose other time or date!`,
       );
     }
-  });
+  }); */
+
+  if (hasTimeConflict(assignedSchedules, newSchedule)) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      `This faculty is not available at that time! Choose other time or date!`,
+    );
+  }
 
   const result = await OfferedCourse.create({ ...payload, academicSemester });
   return result;
