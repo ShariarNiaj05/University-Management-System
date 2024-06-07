@@ -1,0 +1,42 @@
+import { z } from 'zod';
+import { Days } from './OfferedCourse.constant';
+
+/* const timeStringSchema = z.string().refine(
+  time => {
+    const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // 00-09 10-19 20-23
+    return regex.test(time);
+  },
+  {
+    message: 'Invalid time format , expected "HH:MM" in 24 hours format',
+  },
+); */
+
+const createOfferedCourseValidationSchema = z.object({
+  body: z.object({
+    semesterRegistration: z.string(),
+    academicFaculty: z.string(),
+    academicDepartment: z.string(),
+    course: z.string(),
+    faculty: z.string(),
+    section: z.number(),
+    maxCapacity: z.number(),
+    days: z.array(z.enum([...Days] as [string, ...string[]])),
+    startTime: z.string(), // HH: MM   00-23: 00-59
+    endTime: z.string(),
+  }),
+});
+
+const updateOfferedCourseValidationSchema = z.object({
+  body: z.object({
+    faculty: z.string().optional(),
+    maxCapacity: z.number().optional(),
+    days: z.array(z.enum([...Days] as [string, ...string[]])).optional(),
+    startTime: z.string().optional(), // HH: MM   00-23: 00-59
+    endTime: z.string().optional(),
+  }),
+});
+
+export const OfferedCourseValidations = {
+  createOfferedCourseValidationSchema,
+  updateOfferedCourseValidationSchema,
+};
