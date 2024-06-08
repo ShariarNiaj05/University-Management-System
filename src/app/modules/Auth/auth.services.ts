@@ -2,7 +2,8 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
-import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import config from '../../config';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if user is exist
@@ -10,24 +11,23 @@ const loginUser = async (payload: TLoginUser) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
   }
-  /* // checking if the user is already deleted
-  const isDeleted = isUserExist?.isDeleted;
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
   if (isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, 'User is already deleted');
   }
 
   // checking if the user is blocked
-  const userStatus = isUserExist?.status;
+  const userStatus = user?.status;
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
   }
 
   // checking if the password is correct
-  const isPasswordMatched = await bcrypt.compare(
+  /* const isPasswordMatched = await bcrypt.compare(
     payload?.password,
-    isUserExist.password,
-  );
- */
+    user?.password,
+  ); */
 
   // checking if the password is correct by using static instance method
   const isPasswordMatched = await User.isPasswordMatched(
@@ -38,9 +38,18 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, 'Password Not Matched');
   }
 
-  console.log(isPasswordMatched);
   // access granted: send accessToken and refreshToken
-  return {};
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '365d',
+  });
+  return {
+    accessToken,
+    needPasswordChange: user?.needsPasswordChange,
+  };
 };
 
 export const AuthServices = {
