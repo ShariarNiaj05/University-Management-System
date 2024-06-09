@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/user/user.interface';
+import { User } from '../modules/user/user.model';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +16,42 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     //   have token ? check if the token valid or not
-    const verifyToken = jwt.verify(
+    const decoded = jwt.verify(
+      token,
+      config.jwt_access_secret as string,
+    ) as JwtPayload;
+
+    const { userId, role, iat } = decoded;
+
+    // checking if user is exist
+    const user = await User.isUserExistByCustomId(userId);
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+    }
+    // checking if the user is already deleted
+    const isDeleted = user?.isDeleted;
+    if (isDeleted) {
+      throw new AppError(httpStatus.FORBIDDEN, 'User is already deleted');
+    }
+
+    // checking if the user is blocked
+    const userStatus = user?.status;
+    if (userStatus === 'blocked') {
+      throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
+    }
+
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You're not authorized to go forward",
+      );
+    }
+    req.user = decoded as JwtPayload;
+    next();
+
+    //   have token ? check if the token valid or not
+
+    /* const verifyToken = jwt.verify(
       token,
       config.jwt_access_secret as string,
       function (err, decoded) {
@@ -36,7 +72,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         req.user = decoded as JwtPayload;
         next();
       },
-    );
+    ); */
   });
 };
 
