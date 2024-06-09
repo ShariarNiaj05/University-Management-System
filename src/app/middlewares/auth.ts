@@ -4,9 +4,9 @@ import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
-import { TUser } from '../modules/user/user.interface';
+import { TUserRole } from '../modules/user/user.interface';
 
-const auth = (...requiredRoles: TUser[]) => {
+const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     //   check if any token available
