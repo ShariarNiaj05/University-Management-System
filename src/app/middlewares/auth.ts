@@ -40,6 +40,16 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
     }
 
+    if (
+      user?.passwordChangeAt &&
+      User.isJWTIssuedBeforePasswordChanged(
+        user.passwordChangeAt,
+        iat as number,
+      )
+    ) {
+      throw new AppError(httpStatus.FORBIDDEN, 'Don not try to over smart');
+    }
+
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(
         httpStatus.FORBIDDEN,
