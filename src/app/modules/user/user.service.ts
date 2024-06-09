@@ -38,7 +38,12 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   try {
     session.startTransaction();
     //set  generated id
-    userData.id = await generateStudentId(admissionSemester);
+
+    if (admissionSemester !== null) {
+      userData.id = await generateStudentId(admissionSemester);
+    } else {
+      throw new AppError(httpStatus.BAD_REQUEST, 'admissionSemester is null');
+    }
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array

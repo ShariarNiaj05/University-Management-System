@@ -1,11 +1,11 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-import { createStudentValidationSchema } from './../student/student.validation';
 import { UserControllers } from './user.controller';
 import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import { createStudentValidationSchema } from '../student/student.validation';
 
 const router = express.Router();
 
