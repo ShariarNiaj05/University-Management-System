@@ -152,6 +152,7 @@ const refreshToken = async (token: string) => {
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
   }
+
   if (
     user?.passwordChangeAt &&
     User.isJWTIssuedBeforePasswordChanged(user.passwordChangeAt, iat as number)
@@ -175,8 +176,41 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const forgetPassword = async (userId: string) => {
+  // checking if user is exist
+  const user = await User.isUserExistByCustomId(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'User is already deleted');
+  }
+
+  // checking if the user is blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
+  }
+
+  // access granted: send accessToken and refreshToken
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10m', // generated link will be valid only for 10 minutes
+  );
+
+  const resetUILink = `http://localhost:3000/api/v1?id=${user.id}&token=${accessToken}`;
+  console.log(resetUILink);
+};
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
 };
