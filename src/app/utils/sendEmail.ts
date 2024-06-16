@@ -15,8 +15,8 @@ export const sendEmail = async (to: string, html: string) => {
   await transporter.sendMail({
     from: `${config.send_mail_user}`, // sender address
     to: to, // list of receivers
-    subject: 'Change your password', // Subject line
-    text: 'Forgot the password? Change it within 10 minutes', // plain text body
+    subject: 'Forgot the password? Change it within 10 minutes', // Subject line
+    text: '', // plain text body
     html: html, // html body
   });
 };
