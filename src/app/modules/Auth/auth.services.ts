@@ -206,10 +206,10 @@ const forgetPassword = async (userId: string) => {
     '10m', // generated link will be valid only for 10 minutes
   );
 
-  const resetUILink = `http://localhost:3000/api/v1?id=${user.id}&token=${resetToken}`;
+  const resetUILink = `${config.reset_pass_ui_link}/api/v1?id=${user.id}&token=${resetToken}`;
   console.log(resetUILink);
 
-  sendEmail();
+  sendEmail(user?.email, resetUILink);
 };
 export const AuthServices = {
   loginUser,
