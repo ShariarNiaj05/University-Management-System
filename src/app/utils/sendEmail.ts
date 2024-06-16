@@ -7,13 +7,13 @@ export const sendEmail = async (to: string, html: string) => {
     port: 587,
     secure: config.NODE_ENV === 'production' ? true : false, // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: 'shariarn85@gmail.com',
-      pass: 'bzzc fncm mwln qrdy',
+      user: `${config.send_mail_user}`,
+      pass: `${config.send_mail_pass}`,
     },
   });
 
   await transporter.sendMail({
-    from: '"Shariar Islam 👻" <shariarn85@gmail.com>', // sender address
+    from: `${config.send_mail_user}`, // sender address
     to: to, // list of receivers
     subject: 'Change your password', // Subject line
     text: 'Forgot the password? Change it within 10 minutes', // plain text body
