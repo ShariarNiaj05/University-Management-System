@@ -211,9 +211,13 @@ const forgetPassword = async (userId: string) => {
 
   sendEmail(user?.email, resetUILink);
 };
+
+const resetPassword = async () => {};
+
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
   forgetPassword,
+  resetPassword,
 };
