@@ -125,9 +125,9 @@ const changePassword = async (
 
 const refreshToken = async (token: string) => {
   //   check if any token available
-  if (!token) {
+  /* if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, "You're not authorized");
-  }
+  } */
 
   //   have token ? check if the token valid or not
   const decoded = jwt.verify(
@@ -214,7 +214,7 @@ const forgetPassword = async (userId: string) => {
 
 const resetPassword = async (
   payload: { id: string; newPassword: string },
-  token,
+  token: string,
 ) => {
   // checking if user is exist
   const user = await User.isUserExistByCustomId(payload.id);
@@ -232,6 +232,36 @@ const resetPassword = async (
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'User is blocked');
   }
+
+  //   have token ? check if the token valid or not
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
+
+  const { userId, role } = decoded;
+  if (payload.id !== userId) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Forbidden access');
+  }
+
+  // hash new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  // not returning result because don't need to show it to frontend
+  await User.findOneAndUpdate(
+    {
+      id: userId,
+      role: role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangeAt: new Date(),
+    },
+  );
 };
 
 export const AuthServices = {
