@@ -180,8 +180,18 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
+const getMeFromDB = async (id: string, role: string) => {
+  try {
+    const result = await '';
+    return result;
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMeFromDB,
 };
