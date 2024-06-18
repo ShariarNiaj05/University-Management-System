@@ -2,10 +2,15 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { StudentControllers } from './student.controller';
 import { updateStudentValidationSchema } from './student.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
-router.get('/:id', StudentControllers.getSingleStudent);
+router.get(
+  '/:id',
+  auth('admin', 'faculty'), // for security reason student can't get their details using this route. Check user.route.ts for every role details
+  StudentControllers.getSingleStudent,
+);
 
 router.patch(
   '/:id',

@@ -28,5 +28,10 @@ router.post(
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
+router.get(
+  '/me',
+ 
+  UserControllers.,
+);
 
 export const UserRoutes = router;
