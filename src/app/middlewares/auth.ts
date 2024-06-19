@@ -47,7 +47,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
         iat as number,
       )
     ) {
-      throw new AppError(httpStatus.FORBIDDEN, 'Don not try to over smart');
+      throw new AppError(httpStatus.FORBIDDEN, 'Do not try to over smart');
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {

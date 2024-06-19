@@ -10,7 +10,7 @@ export const createToken = (
   });
 };
 
-export const verifyToken = (token: string, secret: string) => {
+export const verifyToken = (token: string | JwtPayload, secret: string) => {
   const tokenInfo = jwt.verify(token, secret) as JwtPayload;
   return tokenInfo;
 };
