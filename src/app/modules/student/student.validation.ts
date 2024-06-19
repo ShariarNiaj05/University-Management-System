@@ -5,7 +5,7 @@ const createUserNameValidationSchema = z.object({
     .string()
     .min(1)
     .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
+    .refine(value => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
     }),
   middleName: z.string(),
@@ -30,7 +30,7 @@ const createLocalGuardianValidationSchema = z.object({
 
 export const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string().max(20),
+    password: z.string().max(20).optional(),
     student: z.object({
       name: createUserNameValidationSchema,
       gender: z.enum(['male', 'female', 'other']),
@@ -44,7 +44,7 @@ export const createStudentValidationSchema = z.object({
       guardian: createGuardianValidationSchema,
       localGuardian: createLocalGuardianValidationSchema,
       admissionSemester: z.string(),
-      profileImg: z.string(),
+      // profileImg: z.string(),
       academicDepartment: z.string(),
     }),
   }),
