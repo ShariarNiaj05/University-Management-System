@@ -16,4 +16,8 @@ export default {
   reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
   send_mail_user: process.env.SEND_MAIL_USER,
   send_mail_pass: process.env.SEND_MAIL_PASS,
+  clodinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  clodinary_api_key: process.env.CLOUDINARY_API_KEY,
+  clodinary_api_secret: process.env.CLOUDINARY_API_SECRET,
+  clodinary_url: process.env.CLOUDINARY_URL,
 };
