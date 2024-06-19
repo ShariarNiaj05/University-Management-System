@@ -54,8 +54,7 @@ const createStudentIntoDB = async (
     const imageName = `${userData?.id}${payload?.name?.firstName}`;
     const path = file?.path;
     // send image to cloudinary
-    const profileImage = sendImageToCloudinary(imageName, path);
-    userData.profileImg = profileImage;
+    const profileImage = await sendImageToCloudinary(imageName, path);
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array
@@ -64,9 +63,11 @@ const createStudentIntoDB = async (
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
     }
+
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImg = profileImage.secure_url;
 
     // create a student (transaction-2)
 
