@@ -47,6 +47,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'admissionSemester is null');
     }
 
+    // send image to cloudinary
+    sendImageToCloudinary();
+
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array
 
