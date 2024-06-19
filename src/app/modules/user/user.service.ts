@@ -19,7 +19,11 @@ import { Faculty } from '../Faculty/faculty.model';
 import { Admin } from '../Admin/admin.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -47,8 +51,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'admissionSemester is null');
     }
 
+    const imageName = `${userData?.id}${payload?.name?.firstName}`;
+    const path = file?.path;
     // send image to cloudinary
-    sendImageToCloudinary();
+    const profileImage = sendImageToCloudinary(imageName, path);
+    userData.profileImg = profileImage;
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array
