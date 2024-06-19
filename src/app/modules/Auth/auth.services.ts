@@ -102,7 +102,7 @@ const changePassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Password Not Matched');
   }
 
-  // hash new passowrd
+  // hash new password
   const newHashedPassword = await bcrypt.hash(
     payload.newPassword,
     Number(config.bcrypt_salt_rounds),
