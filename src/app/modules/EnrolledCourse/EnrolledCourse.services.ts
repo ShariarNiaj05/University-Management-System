@@ -6,6 +6,7 @@ import EnrolledCourse from './enrolledCourse.model';
 import { Student } from '../student/student.model';
 import mongoose from 'mongoose';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Course } from '../Course/course.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -22,6 +23,8 @@ const createEnrolledCourseIntoDB = async (
   if (!isOfferedCourseExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found');
   }
+
+  const course = await Course.findById(isOfferedCourseExist.course);
 
   if (isOfferedCourseExist.maxCapacity <= 0) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Room is full');
@@ -44,6 +47,10 @@ const createEnrolledCourseIntoDB = async (
   const semesterRegistration = await SemesterRegistration.findById(
     isOfferedCourseExist.semesterRegistration,
   ).select('maxCredit');
+  if (!semesterRegistration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Registered semester not found');
+  }
+
   // total enrolled credits + new enrolled course credit > maxCredit then throw an error
   const enrolledCourses = await EnrolledCourse.aggregate([
     {
@@ -78,11 +85,20 @@ const createEnrolledCourseIntoDB = async (
   ]);
 
   const totalCredits =
-    enrolledCourses.length > 0 ? enrolledCourses.totalEnrolledCredits : 0;
+    enrolledCourses.length > 0 ? enrolledCourses[0].totalEnrolledCredits : 0;
 
-  console.log({ enrolledCourses });
+  if (
+    totalCredits &&
+    semesterRegistration.maxCredit &&
+    totalCredits + course?.credits > semesterRegistration?.maxCredit
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'You have exceeded maximum number of credits',
+    );
+  }
 
-  /*  const session = await mongoose.startSession();
+  const session = await mongoose.startSession();
   try {
     session.startTransaction();
     const result = await EnrolledCourse.create(
@@ -130,7 +146,7 @@ const createEnrolledCourseIntoDB = async (
       httpStatus.BAD_REQUEST,
       `failed to register course ${error}`,
     );
-  } */
+  }
 };
 
 const updateEnrolledCourseMarksIntoDB = async () => {};
