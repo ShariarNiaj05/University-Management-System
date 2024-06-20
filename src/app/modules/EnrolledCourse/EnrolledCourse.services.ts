@@ -15,7 +15,8 @@ const createEnrolledCourseIntoDB = async (
   /***
    * step:1 > check if the offered course is exist.
    * step:2 > check if the student is already enrolled for the specific course
-   * step:3 > if pass the above validation create an enrolled course
+   * step:3 > check if the max credits exceed
+   * step:4 > if pass the above validation create an enrolled course
    */
   const { offeredCourse } = payload;
 
@@ -23,8 +24,6 @@ const createEnrolledCourseIntoDB = async (
   if (!isOfferedCourseExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found');
   }
-
-  const course = await Course.findById(isOfferedCourseExist.course);
 
   if (isOfferedCourseExist.maxCapacity <= 0) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Room is full');
@@ -44,12 +43,17 @@ const createEnrolledCourseIntoDB = async (
   }
 
   // check if totalCredits exceed maxCredit
+  const course = await Course.findById(isOfferedCourseExist.course);
+  const currentCredit = course?.credits;
+
   const semesterRegistration = await SemesterRegistration.findById(
     isOfferedCourseExist.semesterRegistration,
   ).select('maxCredit');
   if (!semesterRegistration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Registered semester not found');
   }
+
+  const maxCredit = semesterRegistration.maxCredit;
 
   // total enrolled credits + new enrolled course credit > maxCredit then throw an error
   const enrolledCourses = await EnrolledCourse.aggregate([
@@ -87,11 +91,7 @@ const createEnrolledCourseIntoDB = async (
   const totalCredits =
     enrolledCourses.length > 0 ? enrolledCourses[0].totalEnrolledCredits : 0;
 
-  if (
-    totalCredits &&
-    semesterRegistration.maxCredit &&
-    totalCredits + course?.credits > semesterRegistration?.maxCredit
-  ) {
+  if (totalCredits && maxCredit && totalCredits + currentCredit > maxCredit) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       'You have exceeded maximum number of credits',
