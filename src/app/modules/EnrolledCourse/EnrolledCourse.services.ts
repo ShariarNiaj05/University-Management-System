@@ -52,11 +52,37 @@ const createEnrolledCourseIntoDB = async (
         student: student._id,
       },
     },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'enrolledCourseData',
+      },
+    },
+    {
+      $unwind: '$enrolledCourseData',
+    },
+    {
+      $group: {
+        _id: null,
+        totalEnrolledCredits: { $sum: '$enrolledCourseData.credits' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalEnrolledCredits: 1,
+      },
+    },
   ]);
+
+  const totalCredits =
+    enrolledCourses.length > 0 ? enrolledCourses.totalEnrolledCredits : 0;
 
   console.log({ enrolledCourses });
 
-  const session = await mongoose.startSession();
+  /*  const session = await mongoose.startSession();
   try {
     session.startTransaction();
     const result = await EnrolledCourse.create(
@@ -104,7 +130,7 @@ const createEnrolledCourseIntoDB = async (
       httpStatus.BAD_REQUEST,
       `failed to register course ${error}`,
     );
-  }
+  } */
 };
 
 const updateEnrolledCourseMarksIntoDB = async () => {};
