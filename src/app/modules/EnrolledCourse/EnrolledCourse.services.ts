@@ -205,6 +205,17 @@ const updateEnrolledCourseMarksIntoDB = async (
     }
   }
 
+  if (courseMarks?.finalTerm) {
+    const { classTest1, classTest2, midTerm, finalTerm } =
+      isCourseBelongToFaculty.courseMarks;
+
+    const totalMarks =
+      Math.ceil(classTest1 * 0.1) +
+      Math.ceil(midTerm * 0.3) +
+      Math.ceil(classTest2 * 0.1) +
+      Math.ceil(finalTerm * 0.5);
+  }
+
   const result = await EnrolledCourse.findByIdAndUpdate(
     isCourseBelongToFaculty._id,
     modifiedData,
