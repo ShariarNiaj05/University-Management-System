@@ -1,14 +1,17 @@
 import config from '../../config';
 // import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
-import AcademicSemester from '../academicSemester/academicSemester.model';
-import { TStudent } from '../students/students.interface';
-import Student from '../students/students.model';
+// import AcademicSemester from '../academicSemester/academicSemester.model';
+// import { TStudent } from '../students/students.interface';
+// import Student from '../students/students.model';
 import { TUser } from './user.interface';
 import User from './user.model';
 import { generateStudentId } from './user.utils';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import { TStudent } from '../student/student.interface';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { Student } from '../student/student.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   /* if (await User.isUserExists(studentData.id)) {
