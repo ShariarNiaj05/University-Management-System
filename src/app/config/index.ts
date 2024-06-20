@@ -20,4 +20,5 @@ export default {
   clodinary_api_key: process.env.CLOUDINARY_API_KEY,
   clodinary_api_secret: process.env.CLOUDINARY_API_SECRET,
   clodinary_url: process.env.CLOUDINARY_URL,
+  super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
 };
