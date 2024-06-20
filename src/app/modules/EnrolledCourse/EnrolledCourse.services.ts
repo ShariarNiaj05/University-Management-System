@@ -54,6 +54,8 @@ const createEnrolledCourseIntoDB = async (
     },
   ]);
 
+  console.log({ enrolledCourses });
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
