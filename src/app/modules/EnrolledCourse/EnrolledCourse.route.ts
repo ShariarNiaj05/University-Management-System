@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
-import { EnrolledCourseValidations } from './EnrolledCourse.validation';
-import { EnrolledCourseControllers } from './EnrolledCourse.controller';
+import { EnrolledCourseValidations } from './enrolledCourse.validation';
+import { EnrolledCourseControllers } from './enrolledCourse.controller';
 
 const router = Router();
 
