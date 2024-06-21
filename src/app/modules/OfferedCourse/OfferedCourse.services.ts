@@ -173,7 +173,7 @@ const getMyOfferedCoursesFromDB = async (
     );
   }
 
-  const result = [
+  const result = await OfferedCourse.aggregate([
     {
       $match: {
         semesterRegistration: currentOngoingRegistrationSemester?._id,
@@ -189,7 +189,7 @@ const getMyOfferedCoursesFromDB = async (
         as: 'course',
       },
     },
-  ];
+  ]);
 
   return result;
 };
