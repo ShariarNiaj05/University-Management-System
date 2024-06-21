@@ -173,7 +173,25 @@ const getMyOfferedCoursesFromDB = async (
     );
   }
 
-  return null;
+  const result = [
+    {
+      $match: {
+        semesterRegistration: currentOngoingRegistrationSemester?._id,
+        academicFaculty: student.academicFaculty,
+        academicDepartment: student.academicDepartment,
+      },
+    },
+    {
+      $lookup: {
+        from: 'courses',
+        localField: 'course',
+        foreignField: '_id',
+        as: 'course',
+      },
+    },
+  ];
+
+  return result;
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
