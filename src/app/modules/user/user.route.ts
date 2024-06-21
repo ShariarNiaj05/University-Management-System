@@ -25,7 +25,7 @@ router.post(
 
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
@@ -38,7 +38,7 @@ router.post(
 
 router.post(
   '/change-status/:id',
-  auth('admin'),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(UserValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );

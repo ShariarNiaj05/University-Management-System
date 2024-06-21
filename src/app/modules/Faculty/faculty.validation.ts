@@ -6,7 +6,7 @@ const createUserNameValidationSchema = z.object({
     .string()
     .min(1)
     .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
+    .refine(value => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
     }),
   middleName: z.string(),
@@ -28,6 +28,8 @@ export const createFacultyValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       academicDepartment: z.string(),
+      academicFaculty: z.string(),
+
       profileImg: z.string(),
     }),
   }),
@@ -54,11 +56,12 @@ export const updateFacultyValidationSchema = z.object({
       permanentAddress: z.string().optional(),
       profileImg: z.string().optional(),
       academicDepartment: z.string().optional(),
+      academicFaculty: z.string().optional(),
     }),
   }),
 });
 
-export const studentValidations = {
+export const facultyValidations = {
   createFacultyValidationSchema,
   updateFacultyValidationSchema,
 };
