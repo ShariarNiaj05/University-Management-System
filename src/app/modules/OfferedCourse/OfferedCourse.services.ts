@@ -226,7 +226,7 @@ const getMyOfferedCoursesFromDB = async (
       },
     },
 
-    /* {
+    {
       $lookup: {
         from: 'enrolledcourses',
         let: {
@@ -250,8 +250,8 @@ const getMyOfferedCoursesFromDB = async (
         ],
         as: 'completedCourses',
       },
-    }, */
-    /*  {
+    },
+    {
       $addFields: {
         completedCourseIds: {
           $map: {
@@ -261,10 +261,10 @@ const getMyOfferedCoursesFromDB = async (
           },
         },
       },
-    }, */
+    },
     {
       $addFields: {
-        /* isPreRequisitesFulFilled: {
+        isPreRequisitesFulFilled: {
           $or: [
             { $eq: ['$course.preRequisiteCourses', []] },
             {
@@ -274,7 +274,7 @@ const getMyOfferedCoursesFromDB = async (
               ],
             },
           ],
-        }, */
+        },
 
         isAlreadyEnrolled: {
           $in: [
